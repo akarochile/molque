@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Mercadito Deli — MOLQUE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #080808; --deep: #0E0B18; --purple: #1C1133;
+      --teal: #00D4AA; --white: #F2EFE9; --muted: #7A7A8C;
+      --syne: 'Syne', sans-serif; --dm: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: var(--dm); overflow-x: hidden; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 28px 60px; background: rgba(8,8,8,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(242,239,233,0.05); }
+    .nav-logo { font-family: var(--syne); font-size: 22px; font-weight: 800; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--teal); }
+    .nav-back { display: flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+    .nav-back:hover { color: var(--teal); }
+    .nav-back::before { content: '←'; }
+    .project-hero { min-height: 75vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 120px 60px 80px; position: relative; overflow: hidden; background: var(--deep); }
+    .project-hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 70% 30%, rgba(28,17,51,0.9) 0%, transparent 70%); }
+    .project-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: saturate(0.6); }
+    .project-hero-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--syne); font-size: clamp(60px, 14vw, 180px); font-weight: 800; color: rgba(0,212,170,0.04); letter-spacing: -0.04em; user-select: none; text-align: center; padding: 40px; }
+    .project-hero-content { position: relative; z-index: 1; }
+    .project-tag { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 24px; }
+    .project-tag::before { content: ''; width: 24px; height: 1px; background: var(--teal); }
+    .project-title { font-family: var(--syne); font-size: clamp(44px, 7vw, 100px); font-weight: 800; line-height: 0.9; letter-spacing: -0.03em; margin-bottom: 32px; }
+    .project-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+    .meta-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .meta-value { font-size: 15px; color: var(--white); }
+    .project-intro { padding: 100px 60px; background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .intro-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .intro-tag::before { content: ''; width: 24px; height: 1px; background: var(--teal); }
+    .intro-title { font-family: var(--syne); font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; }
+    .intro-title em { font-style: normal; color: var(--teal); }
+    .intro-desc { font-size: 17px; line-height: 1.8; color: rgba(242,239,233,0.6); }
+    .services-done { display: flex; flex-direction: column; gap: 0; }
+    .service-row { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid rgba(242,239,233,0.07); }
+    .service-row:first-child { border-top: 1px solid rgba(242,239,233,0.07); }
+    .service-name { font-size: 15px; color: rgba(242,239,233,0.7); }
+    .service-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+    .featured-img-section { padding: 0 60px 4px; background: var(--black); }
+    .featured-img-wrap { width: 100%; aspect-ratio: 16/7; overflow: hidden; background: var(--purple); position: relative; }
+    .featured-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: absolute; inset: 0; }
+    .img-placeholder span { font-family: var(--syne); font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(242,239,233,0.15); }
+    .gallery-section { padding: 4px 60px 100px; background: var(--black); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .gallery-item { aspect-ratio: 1; overflow: hidden; background: var(--deep); position: relative; }
+    .gallery-item.wide { grid-column: span 2; aspect-ratio: 2/1; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease, filter 0.4s; filter: saturate(0.8); }
+    .gallery-item:hover img { transform: scale(1.04); filter: saturate(1); }
+    .gallery-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .gallery-placeholder span { font-family: var(--syne); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(242,239,233,0.12); }
+    .next-project { padding: 100px 60px; background: var(--deep); display: flex; align-items: center; justify-content: space-between; }
+    .next-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .next-title { font-family: var(--syne); font-size: clamp(28px, 4vw, 48px); font-weight: 800; }
+    .next-link { display: inline-flex; align-items: center; gap: 16px; font-family: var(--syne); font-size: 15px; font-weight: 700; color: var(--white); text-decoration: none; border: 1px solid rgba(242,239,233,0.15); padding: 20px 36px; transition: border-color 0.3s, color 0.3s, background 0.3s; }
+    .next-link:hover { border-color: var(--teal); color: var(--teal); background: rgba(0,212,170,0.04); }
+    .next-link span { font-size: 20px; }
+    footer { background: var(--black); border-top: 1px solid rgba(242,239,233,0.06); padding: 32px 60px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: var(--syne); font-size: 16px; font-weight: 800; letter-spacing: 0.1em; color: rgba(242,239,233,0.3); }
+    .footer-logo span { color: var(--teal); opacity: 0.6; }
+    .footer-copy { font-size: 12px; color: rgba(242,239,233,0.2); }
+    .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+      nav { padding: 24px 28px; }
+      .project-hero { padding: 100px 28px 60px; min-height: 60vh; }
+      .project-intro { grid-template-columns: 1fr; padding: 60px 28px; gap: 48px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.wide { grid-column: span 2; }
+      .featured-img-section, .gallery-section { padding-left: 28px; padding-right: 28px; }
+      .next-project { flex-direction: column; align-items: flex-start; gap: 32px; padding: 60px 28px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">MOL<span>QUE</span></a>
+    <a href="index.html" class="nav-back">Volver al inicio</a>
+  </nav>
+
+  <div class="project-hero">
+    <div class="project-hero-bg"></div>
+    <!-- <img class="project-hero-img" src="./img/mercadito.png" alt="El Mercadito Deli"> -->
+    <div class="project-hero-placeholder">El Mercadito Deli</div>
+    <div class="project-hero-content fade-up">
+      <div class="project-tag">Proyecto — Identidad Completa</div>
+      <h1 class="project-title">El Mercadito<br>Deli</h1>
+      <div class="project-meta">
+        <div class="meta-item">
+          <div class="meta-label">Servicios</div>
+          <div class="meta-value">Logo · Packaging · RRSS · Gigantografía</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Estado</div>
+          <div class="meta-value">Proyecto activo</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Agencia</div>
+          <div class="meta-value">MOLQUE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-intro">
+    <div class="intro-left fade-up">
+      <div class="intro-tag">Sobre la marca</div>
+      <!-- EDITA ESTE TEXTO con la descripción real de El Mercadito Deli -->
+      <h2 class="intro-title">Sabor con <em>identidad</em></h2>
+      <p class="intro-desc">
+        El Mercadito Deli es un local gastronómico chileno especializado en productos frescos, artesanales y de calidad. Al acercarse a MOLQUE, necesitaban construir su identidad visual desde cero: una marca que transmitiera frescura, cercanía y carácter.<br><br>
+        Creamos el logotipo desde la primera letra, desarrollamos el sistema gráfico completo para sus redes sociales y sitio web, diseñamos el packaging de sus bolsas compostables y producimos gigantografías para sus locales físicos, logrando una presencia coherente tanto en digital como en el mundo físico.
+      </p>
+    </div>
+    <div class="intro-right fade-up">
+      <div class="services-done">
+        <div class="service-row"><span class="service-name">Creación de Logotipo</span><span class="service-dot"></span></div>
+        <div class="service-row"><span class="service-name">Sistema Gráfico para RRSS</span><span class="service-dot"></span></div>
+        <div class="service-row"><span class="service-name">Imágenes para Sitio Web</span><span class="service-dot"></span></div>
+        <div class="service-row"><span class="service-name">Packaging Bolsas Compostables</span><span class="service-dot"></span></div>
+        <div class="service-row"><span class="service-name">Gigantografías para Locales</span><span class="service-dot"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="featured-img-section">
+    <div class="featured-img-wrap">
+      <!-- <img src="./img/mercadito-1.jpg" alt="El Mercadito Deli destacada"> -->
+      <div class="img-placeholder"><span>Imagen principal del proyecto — reemplazar</span></div>
+    </div>
+  </div>
+
+  <div class="gallery-section">
+    <div class="gallery-grid">
+      <div class="gallery-item wide fade-up">
+        <!-- <img src="./img/mercadito-2.jpg" alt="Logo"> -->
+        <div class="gallery-placeholder"><span>Logo / imagen 2</span></div>
+      </div>
+      <div class="gallery-item fade-up">
+        <!-- <img src="./img/mercadito-3.jpg" alt="Packaging"> -->
+        <div class="gallery-placeholder"><span>Packaging / imagen 3</span></div>
+      </div>
+      <div class="gallery-item fade-up">
+        <!-- <img src="./img/mercadito-4.jpg" alt="RRSS"> -->
+        <div class="gallery-placeholder"><span>RRSS / imagen 4</span></div>
+      </div>
+      <div class="gallery-item fade-up">
+        <!-- <img src="./img/mercadito-5.jpg" alt="Gigantografía"> -->
+        <div class="gallery-placeholder"><span>Gigantografía / imagen 5</span></div>
+      </div>
+      <div class="gallery-item wide fade-up">
+        <!-- <img src="./img/mercadito-6.jpg" alt="Web"> -->
+        <div class="gallery-placeholder"><span>Web / imagen 6</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="next-project">
+    <div>
+      <div class="next-label">Siguiente proyecto</div>
+      <div class="next-title">Comercial VIT</div>
+    </div>
+    <a href="vit.html" class="next-link">Ver proyecto <span>→</span></a>
+  </div>
+
+  <footer>
+    <div class="footer-logo">MOL<span>QUE</span></div>
+    <div class="footer-copy">© 2025 MOLQUE — Todos los derechos reservados</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
