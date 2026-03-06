@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bizoni — MOLQUE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #080808; --deep: #0E0B18; --purple: #1C1133;
+      --teal: #00D4AA; --white: #F2EFE9; --muted: #7A7A8C;
+      --syne: 'Syne', sans-serif; --dm: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: var(--dm); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 60px; background: rgba(8,8,8,0.82); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(242,239,233,0.05); }
+    .nav-logo { font-family: var(--syne); font-size: 22px; font-weight: 800; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--teal); }
+    .nav-logo img {
+  height: 40px;
+  width: auto;}
+    .nav-back { display: flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+    .nav-back:hover { color: var(--teal); }
+    .nav-back::before { content: '←'; }
+
+    /* HERO DEL PROYECTO */
+    .project-hero {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 120px 60px 80px; position: relative; overflow: hidden;
+      background: var(--deep);
+    }
+    .project-hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 70% at 70% 30%, rgba(28,17,51,0.9) 0%, transparent 70%);
+    }
+    /* Imagen de portada del proyecto */
+    .project-hero-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; opacity: 1; filter: saturate(1);
+    
+    }
+    .project-hero-content { position: relative; z-index: 1; }
+    .project-tag { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 24px; }
+    .project-tag::before { content: ''; width: 24px; height: 1px; background: var(--teal); }
+    .project-title { font-family: var(--syne); font-size: clamp(56px, 9vw, 120px); font-weight: 800; line-height: 0.9; letter-spacing: -0.03em; margin-bottom: 32px; }
+    .project-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+    .meta-item {}
+    .meta-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .meta-value { font-size: 15px; color: var(--white); }
+
+    /* DESCRIPCIÓN */
+    .project-intro { padding: 100px 60px; background: var(--black); max-width: 860px; margin: 0 auto; }
+    .intro-left {}
+    .intro-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .intro-tag::before { content: ''; width: 24px; height: 1px; background: var(--teal); }
+    .intro-title { font-family: var(--syne); font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; }
+    .intro-title em { font-style: normal; color: var(--teal); }
+    .intro-desc { font-size: 17px; line-height: 1.8; color: rgba(242,239,233,0.6); }
+    .intro-right {}
+    .services-done { display: flex; flex-direction: column; gap: 0; }
+    .service-row { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid rgba(242,239,233,0.07); }
+    .service-row:first-child { border-top: 1px solid rgba(242,239,233,0.07); }
+    .service-name { font-size: 15px; color: rgba(242,239,233,0.7); }
+    .service-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+    /* IMAGEN DESTACADA */
+    .featured-img-section { padding: 0 60px 4px; background: var(--black); }
+    .featured-img-wrap { width: 100%; aspect-ratio: 16/7; overflow: hidden; background: transparent; position: relative; }
+    .featured-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    /* Placeholder */
+    .img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: absolute; inset: 0; }
+    .img-placeholder span { font-family: var(--syne); font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(242,239,233,0.15); }
+
+    /* GALERÍA */
+    .gallery-section { padding: 4px 60px 100px; background: var(--black); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .gallery-item { aspect-ratio: 1; overflow: hidden; background: var(--deep); position: relative; }
+    .gallery-item.wide { grid-column: span 2; aspect-ratio: 2/1; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease, filter 0.4s; filter: saturate(0.8); }
+    .gallery-item:hover img { transform: scale(1.04); filter: saturate(1); }
+    /* Número placeholder en cada celda */
+    .gallery-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .gallery-placeholder span { font-family: var(--syne); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(242,239,233,0.12); }
+
+    /* CTA SIGUIENTE PROYECTO */
+    .next-project {
+      padding: 100px 60px; background: var(--deep);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .next-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .next-title { font-family: var(--syne); font-size: clamp(28px, 4vw, 48px); font-weight: 800; }
+    .next-link {
+      display: inline-flex; align-items: center; gap: 16px;
+      font-family: var(--syne); font-size: 15px; font-weight: 700;
+      color: var(--white); text-decoration: none;
+      border: 1px solid rgba(242,239,233,0.15); padding: 20px 36px;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .next-link:hover { border-color: var(--teal); color: var(--teal); background: rgba(0,212,170,0.04); }
+    .next-link span { font-size: 20px; }
+
+    /* FOOTER */
+    footer { background: var(--black); border-top: 1px solid rgba(242,239,233,0.06); padding: 32px 60px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: var(--syne); font-size: 16px; font-weight: 800; letter-spacing: 0.1em; color: rgba(242,239,233,0.3); }
+    .footer-logo span { color: var(--teal); opacity: 0.6; }
+    .footer-copy { font-size: 12px; color: rgba(242,239,233,0.2); }
+
+    /* ANIMACIONES */
+   .brand-statement {
+  background: var(--black);
+  padding: 150px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.brand-statement .statement-title {
+  max-width: 860px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+.brand-statement .brand-text {
+  max-width: 860px;
+  width: 100%;
+}
+.brand-text {
+  font-family: var(--syne);
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--white);
+  max-width: 860px;
+  text-align: left;
+}
+/* COLORES CORPORATIVOS */
+.brand-colors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 800px;
+}
+.colors-left {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+.color-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  position: relative;
+}
+.colors-right {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+}
+.color-scale {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: stripReveal 7s ease infinite;
+  animation-delay: var(--delay);
+}
+@keyframes stripReveal {
+  0%   { opacity: 0; transform: translateY(100%); }
+  15%  { opacity: 1; transform: translateY(0); }
+  70%  { opacity: 1; transform: translateY(0); }
+  85%  { opacity: 0; transform: translateY(-100%); }
+  100% { opacity: 0; transform: translateY(100%); }
+}
+.color-label {
+  font-family: var(--syne);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(0,0,0,0.5);
+  mix-blend-mode: multiply;
+}
+.color-main .color-label {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.color-name {
+  font-family: var(--dm);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.4);
+  mix-blend-mode: multiply;
+}
+/* Para colores oscuros, texto blanco */
+.color-scale[style*="#1C77E7"] .color-label,
+.color-scale[style*="#1D1D1B"] .color-label,
+.color-main[style*="#FF4D00"] .color-label,
+.color-main[style*="#FF4D00"] .color-name {
+  color: rgba(255,255,255,0.7);
+  mix-blend-mode: normal;
+}
+/* DOS IMÁGENES LADO A LADO */
+.double-img-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+  background: var(--black);
+}
+.double-img-item {
+  width: 100%;
+  aspect-ratio: 960 / 720;
+  overflow: hidden;
+  background: var(--deep);
+  position: relative;
+}
+.double-img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.4s;
+  filter: saturate(0.8);
+}
+.double-img-item:hover img {
+  transform: scale(1.04);
+  filter: saturate(1);
+}
+.double-img-logo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+  background: var(--black);
+}
+.double-img-logo .double-img-item {
+  aspect-ratio: 960 / 720;
+  overflow: hidden;
+  background: var(--deep);
+  position: relative;
+}
+.double-img-logo .double-img-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.4s;
+  filter: saturate(0.8);
+}
+.double-img-logo .double-img-item:hover img {
+  transform: scale(1.04);
+  filter: saturate(1);
+}
+.banner-full {
+  width: 100%;
+  aspect-ratio: 1920 / 325;
+  overflow: hidden;
+  background: var(--deep);
+  position: relative;
+}
+.banner-full img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.banner-full img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.statement-title {
+  font-family: var(--syne);
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.img-rrss-full {
+  width: 100%;
+  aspect-ratio: 1620 / 960;
+  overflow: hidden;
+  background: var(--deep);
+}
+.img-rrss-full img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* NAVEGACIÓN ENTRE PROYECTOS */
+.project-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 60px;
+  background: var(--deep);
+  border-top: 1px solid rgba(242,239,233,0.07);
+}
+.project-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.project-nav-btn:hover { color: var(--white); }
+.project-nav-btn:hover .project-nav-arrow { color: var(--teal); }
+.project-nav-right { flex-direction: row-reverse; }
+.project-nav-arrow {
+  font-size: 22px;
+  color: var(--teal);
+  transition: color 0.3s, transform 0.3s;
+}
+.project-nav-btn:hover .project-nav-arrow { transform: translateX(4px); }
+.project-nav-btn.project-nav-right:hover .project-nav-arrow { transform: translateX(-4px); }
+.project-nav-label {
+  font-family: var(--syne);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.project-nav-center {
+  font-family: var(--dm);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.project-nav-center:hover { color: var(--teal); }
+/* LOGO INFERIOR */
+.logo-bottom {
+  background: var(--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 60px;
+  border-top: 1px solid rgba(242,239,233,0.06);
+}
+.logo-bottom img {
+  height: 60px;
+  width: auto;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  filter: brightness(10);
+}
+.logo-bottom img:hover { opacity: 0.9; }
+    .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .accent-orange { color: #FF5C1A !important; }
+    .accent-white { color: #ffffff !important; }
+    .tag-orange::before { background: #FF5C1A !important; }
+    .tag-white::before { background: #ffffff !important; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 24px 28px; }
+      .project-hero { padding: 100px 28px 60px; min-height: 60vh; }
+      .project-intro { grid-template-columns: 1fr; padding: 60px 28px; gap: 48px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.wide { grid-column: span 2; }
+      .featured-img-section, .gallery-section { padding-left: 28px; padding-right: 28px; }
+      .next-project { flex-direction: column; align-items: flex-start; gap: 32px; padding: 60px 28px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px; }
+    }
+    .img-natural img {
+  filter: saturate(1) !important;
+  transition: none !important;
+}
+.img-natural img:hover {
+  transform: none !important;
+  filter: saturate(1) !important;
+}
+.img-ancho-780 {
+  width: 100%;
+  aspect-ratio: 1920 / 780;
+  overflow: hidden;
+}
+.img-ancho-780 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-ancho-480 {
+  width: 100%;
+  aspect-ratio: 1920 / 480;
+  overflow: hidden;
+}
+.img-ancho-480 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-ancho-800 {
+  width: 100%;
+  aspect-ratio: 1920 / 800;
+  overflow: hidden;
+}
+.img-ancho-800 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.img-ancho-800 {
+  width: 100%;
+  aspect-ratio: 1920 / 800;
+  overflow: hidden;
+}
+.img-ancho-800 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="./img/logo.png" alt="MOLQUE">
+    </a>
+    <a href="index.html" class="nav-back">Volver al inicio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="project-hero">
+    <div class="project-hero-bg"></div>
+    <img class="project-hero-img" src="./img/bizoniheader.png" alt="Bizoni">
+    <div class="project-hero-placeholder">BIZONI</div>
+    <div class="project-hero-content fade-up">
+      <div class="project-tag tag-white accent-white">Proyecto — Identidad Completa</div>
+      <h1 class="project-title">Bizoni</h1>
+      <div class="project-meta">
+        <div class="meta-item">
+          <div class="meta-label accent-white">Servicios</div>
+          <div class="meta-value">Identidad Visual · Brandbook · Packaging · RRSS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESCRIPCIÓN -->
+  <div class="project-intro">
+    <div class="intro-left fade-up">
+      <div class="intro-tag tag-orange accent-orange">Sobre la marca</div>
+      <!-- EDITA ESTE TEXTO con la descripción real de Bizoni -->
+      <h2 class="intro-title">Una marca con <em style="color: #FF5C1A;">identidad propia</em></h2>
+      <p class="intro-desc">
+        Bizoni es una empresa chilena enfocada en ofrecer productos de calidad a sus clientes, especialmente con el foco en la higiene personal. En MOLQUE ajustamos una identidad visual coherente y profesional que les permitiera comunicar sus valores de forma consistente en todos sus canales digitales y físicos.<br><br>
+        El desafío fue rediseñar su logo corrigiendo inconsistencias técnicas, desarrollar un brandbook completo como guía de uso de marca, crear el packaging de sus cajas de producto y mantener una línea gráfica activa para sus campañas de redes sociales, sitio web y publicidad digital.
+      </p>
+    </div>
+    
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGEN GRANDE DESTACADA -->
+  <div class="featured-img-section">
+    <div class="featured-img-wrap">
+      <img src="./img/bizoni-2.png" alt="Bizoni destacada">
+    </div>
+  </div>
+
+  <!-- GALERÍA EN CUADRÍCULA -->
+   <div class="brand-statement">
+    <h3 class="statement-title">Identidad que no se olvida</h3>
+  <p class="brand-text">
+    <!-- ESCRIBE AQUÍ tu texto breve sobre Bizoni y su identidad -->
+    El sistema de color de Bizoni fue diseñado para transmitir energía, calidez y confianza. Los naranjos y amarillos lideran la comunicación visual, mientras que los colores de soporte garantizan versatilidad en cualquier soporte o formato.
+  </p>
+</div>
+<!-- SECCIÓN COLORES CORPORATIVOS -->
+<div class="brand-colors">
+  <div class="colors-left">
+    <div class="color-main" style="background: #FF4D00;">
+      <span class="color-label">#FF4D00</span>
+      <span class="color-name">Color Principal</span>
+    </div>
+    <div class="color-main" style="background: #FFD02B;">
+      <span class="color-label">#FFD02B</span>
+      <span class="color-name">Segundo Principal</span>
+    </div>
+  </div>
+  <div class="colors-right">
+    <div class="color-scale" style="--delay: 0s; background: #FC7E0F;">
+      <span class="color-label">#FC7E0F</span>
+    </div>
+    <div class="color-scale" style="--delay: 0.2s; background: #FFF8A8;">
+      <span class="color-label">#FFF8A8</span>
+    </div>
+    <div class="color-scale" style="--delay: 0.4s; background: #1C77E7;">
+      <span class="color-label">#1C77E7</span>
+    </div>
+    <div class="color-scale" style="--delay: 0.6s; background: #F2F2F2;">
+      <span class="color-label">#F2F2F2</span>
+    </div>
+    <div class="color-scale" style="--delay: 0.8s; background: #1D1D1B;">
+      <span class="color-label">#1D1D1B</span>
+    </div>
+    <div class="color-scale" style="--delay: 1.0s; background: #FFFFFF;">
+      <span class="color-label">#FFFFFF</span>
+    </div>
+  </div>
+</div>
+<!-- SEGUNDO BLOQUE DE TEXTO -->
+<div class="brand-statement">
+    <h3 class="statement-title">Tipografía e identidad</h3>
+  <p class="brand-text">
+    <!-- ESCRIBE AQUÍ tu segundo párrafo -->
+Para acompañar la identidad seleccionamos una tipografía geométrica de espíritu contemporáneo.
+Su construcción limpia y equilibrada aporta orden y claridad, mientras que su amplia variedad de pesos permite construir jerarquías claras y versátiles en cualquier soporte.
+Poppins refuerza el carácter moderno y digital de Bizoni, manteniendo siempre legibilidad, coherencia y presencia de marca.
+  </p>
+</div>
+<!-- DOS IMÁGENES LADO A LADO -->
+<div class="double-img-section">
+  <div class="double-img-item">
+    <img src="./img/font.png" alt="Bizoni font">
+    <!-- placeholder mientras no tienes la imagen: -->
+    <!-- <div class="img-placeholder"><span>Imagen A — 960x720px</span></div> -->
+  </div>
+  <div class="double-img-item">
+    <img src="./img/font-2.png" alt="Bizoni font 2">
+    <!-- <div class="img-placeholder"><span>Imagen B — 960x720px</span></div> -->
+  </div>
+</div>
+<!-- TEXTO LOGO -->
+<div class="brand-statement">
+    <h3 class="statement-title">Reconstruir con precisión</h3>
+  <p class="brand-text">
+    <!-- ESCRIBE AQUÍ tu texto sobre el logo -->
+    El logotipo de Bizoni fue rediseñado corrigiendo inconsistencias técnicas y refinando cada detalle para lograr una marca limpia, versátil y con carácter propio. Su construcción permite aplicarse con coherencia en cualquier soporte, desde digital hasta impresión.
+  </p>
+</div>
+<!-- DOS IMÁGENES LOGO -->
+<div class="double-img-logo">
+  <div class="double-img-item">
+    <img src="./img/logo-reticula.png" alt="Bizoni logo logo-reticula">
+  </div>
+  <div class="double-img-item">
+    <img src="./img/logo-reticula2.png" alt="Bizoni logo logo-reticula2">
+  </div>
+</div>
+<div class="banner-full">
+  <img src="./img/banner-logo.png" alt="Banner logo">
+</div>
+<!-- TEXTO RRSS Y ADS -->
+<div class="brand-statement">
+  <h3 class="statement-title">Diseño digital que conecta</h3>
+  <p class="brand-text">
+    El diseño digital de Bizoni abarca cada punto de contacto con su audiencia. Desde las piezas para redes sociales hasta los banners publicitarios y las imágenes del sitio web, cada elemento fue creado con coherencia visual y propósito estratégico para maximizar el impacto en cada plataforma.
+  </p>
+</div>
+
+<!-- IMAGEN RRSS 1620x960 — cambia el nombre del archivo por el tuyo -->
+<div class="img-rrss-full">
+  <img src="./img/rrss-digital.png" alt="Diseño digital Bizoni">
+  </div>
+<div class="img-ancho-480">
+  <img src="./img/bannerblack2.png" alt="bannerblack">
+</div>
+<div class="img-ancho-780">
+  <img src="./img/valentin.png" alt="valentin">
+</div>
+<div class="img-ancho-780">
+  <img src="./img/verano.png" alt="verano">
+</div>
+<div class="img-ancho-800">
+  <img src="./img/perineal.png" alt="perineal">
+</div>
+<div class="img-ancho-800">
+  <img src="./img/box.png" alt="box">
+</div>
+
+  <!-- NAVEGACIÓN ENTRE PROYECTOS -->
+  <div class="project-nav">
+    <a href="index.html#proyectos" class="project-nav-btn">
+      <span class="project-nav-arrow">←</span>
+      <span class="project-nav-label">Anterior</span>
+    </a>
+    <a href="index.html#proyectos" class="project-nav-center">Todos los proyectos</a>
+    <a href="mercadito.html" class="project-nav-btn project-nav-right">
+      <span class="project-nav-label">Siguiente</span>
+      <span class="project-nav-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- LOGO INFERIOR -->
+  <div class="logo-bottom">
+    <img src="./img/logo.png" alt="MOLQUE">
+  </div>
+
+  <footer>
+    <div class="footer-copy">© 2025 MOLQUE — Todos los derechos reservados</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
